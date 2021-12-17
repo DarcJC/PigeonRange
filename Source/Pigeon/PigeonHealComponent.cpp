@@ -3,6 +3,8 @@
 
 #include "PigeonHealComponent.h"
 
+#include "Net/UnrealNetwork.h"
+
 // Sets default values for this component's properties
 UPigeonHealComponent::UPigeonHealComponent()
 {
@@ -20,17 +22,26 @@ float UPigeonHealComponent::CalcDamageBlocked(float Value)
 	return Armor > 1.0f ? Value / Armor : .0f;
 }
 
-float UPigeonHealComponent::GetDamage(float Value)
+void UPigeonHealComponent::GetDamage_Implementation(float Value)
 {
 	if (Value > .0f)
 	{
 		const float Result = Health - Value + CalcDamageBlocked(Value);
-		const float OldHealth = Health; 
 		Health = (Result > .0f) ? Result : .0f;
-		return OldHealth - Health;
 	}
-	return .0f;
 }
+
+// float UPigeonHealComponent::GetDamage(float Value)
+// {
+// 	if (Value > .0f)
+// 	{
+// 		const float Result = Health - Value + CalcDamageBlocked(Value);
+// 		const float OldHealth = Health; 
+// 		Health = (Result > .0f) ? Result : .0f;
+// 		return OldHealth - Health;
+// 	}
+// 	return .0f;
+// }
 
 // Called when the game starts
 void UPigeonHealComponent::BeginPlay()
@@ -53,5 +64,12 @@ void UPigeonHealComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+}
+
+void UPigeonHealComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UPigeonHealComponent, Health);
 }
 

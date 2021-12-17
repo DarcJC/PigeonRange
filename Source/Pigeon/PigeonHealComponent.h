@@ -16,7 +16,7 @@ public:
 	// Sets default values for this component's properties
 	UPigeonHealComponent();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Replicated)
 	float Health;
 
 	UPROPERTY(EditAnywhere)
@@ -26,8 +26,8 @@ public:
 	float CalcDamageBlocked(float Value);
 
 	// 受到伤害
-	UFUNCTION(BlueprintCallable)
-	float GetDamage(float Value);
+	UFUNCTION(BlueprintCallable, Reliable, Server)
+	void GetDamage(float Value);
 
 protected:
 	// Called when the game starts
