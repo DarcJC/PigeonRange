@@ -22,13 +22,14 @@ float UPigeonHealComponent::CalcDamageBlocked(float Value)
 	return Armor > 1.0f ? Value / Armor : .0f;
 }
 
-void UPigeonHealComponent::GetDamage_Implementation(float Value)
+void UPigeonHealComponent::GetDamage_Implementation(float Value, APigeonCharacter* Controller = nullptr)
 {
 	if (Value > .0f)
 	{
 		const float Result = Health - Value + CalcDamageBlocked(Value);
 		Health = (Result > .0f) ? Result : .0f;
 	}
+	if (Controller) LastDamageSource = Controller;
 }
 
 // float UPigeonHealComponent::GetDamage(float Value)
@@ -57,6 +58,11 @@ float UPigeonHealComponent::GetHealthValue()
 	return Health;
 }
 
+APigeonCharacter* UPigeonHealComponent::GetLastDamageSource()
+{
+	return LastDamageSource;
+}
+
 
 // Called every frame
 void UPigeonHealComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -71,5 +77,6 @@ void UPigeonHealComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UPigeonHealComponent, Health);
+	DOREPLIFETIME(UPigeonHealComponent, LastDamageSource);
 }
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PigeonCharacter.h"
 #include "Components/ActorComponent.h"
 #include "PigeonHealComponent.generated.h"
 
@@ -22,12 +23,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	float Armor;
 
+	UPROPERTY(EditAnywhere, Replicated)
+	APigeonCharacter* LastDamageSource;
+
 	// 计算护甲减伤
 	float CalcDamageBlocked(float Value);
 
 	// 受到伤害
 	UFUNCTION(BlueprintCallable, Reliable, Server)
-	void GetDamage(float Value);
+	void GetDamage(float Value, APigeonCharacter* Controller);
 
 protected:
 	// Called when the game starts
@@ -35,6 +39,9 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealthValue();
+
+	UFUNCTION(BlueprintCallable)
+	APigeonCharacter* GetLastDamageSource();
 
 public:	
 	// Called every frame
